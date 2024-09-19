@@ -4,20 +4,25 @@ import jwt from "jsonwebtoken";
 
 const register = async (req, res) => {
     // --------------- COMPLETAR ---------------
-    /*
+    
 
-        Recordar que para cumplir con toda la funcionalidad deben:
+        //Recordar que para cumplir con toda la funcionalidad deben:
 
-            1. Verificar que el body de la request tenga el campo usuario
-            2. Verificar que el campo usuario tenga los campos nombre, apellido, email y password
-            3. Verificar que no exista un usuario con el mismo email (utilizando el servicio de usuario)
-            4. Devolver un mensaje de error si algo falló hasta el momento (status 400)
-            5. Hashear la contraseña antes de guardarla en la base de datos
-            6. Guardar el usuario en la base de datos (utilizando el servicio de usuario)
-            7. Devolver un mensaje de éxito si todo salió bien (status 201)
-            8. Devolver un mensaje de error si algo falló guardando al usuario (status 500)
-        
-    */
+            //1. Verificar que el body de la request tenga el campo usuario
+            
+            //2. Verificar que el campo usuario tenga los campos nombre, apellido, email y password
+
+            //3. Verificar que no exista un usuario con el mismo email (utilizando el servicio de usuario)
+            //4. Devolver un mensaje de error si algo falló hasta el momento (status 400)
+            //5. Hashear la contraseña antes de guardarla en la base de datos
+            
+            //6. Guardar el usuario en la base de datos (utilizando el servicio de usuario)
+            //7. Devolver un mensaje de éxito si todo salió bien (status 201)
+            //8. Devolver un mensaje de error si algo falló guardando al usuario (status 500)
+            const usuario= req.body;
+            const hashed =  await bcrypt.hash(  usuario.password, 10)
+            console.log("usuario", usuario)
+            console.log("hashed", hashed)
 };
 
 const login = async (req, res) => {
