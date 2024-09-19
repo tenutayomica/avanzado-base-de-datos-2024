@@ -14,6 +14,21 @@ export const verifyToken = async (req, res, next) => {
     
         Recordar también que si sucede cualquier error en este proceso, deben devolver un error 401 (Unauthorized)
     */
+        const jwtoken = req.headers.authorization.slice(7);
+        console.log("jwt", jwtoken)
+        try {
+    
+          const payload = await jwt.verify(jwtoken, jwtkey)
+          console.log("Desencriptado:", payload)
+          let result = await client.query("select * from favoritos where userid=$1",[payload.userid])
+
+          req.id=payload.userid
+          next();
+        }
+        catch(e) {
+          console.log("error jwt",e)
+          res.send("Error jwt")
+        }
 };
 
 export const verifyAdmin = async (req, res, next) => {

@@ -1,7 +1,7 @@
 import UsuariosService from "../services/usuarios.service.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+import usuariosService from "../services/usuarios.service.js";
 const register = async (req, res) => {
     // --------------- COMPLETAR ---------------
     
@@ -19,11 +19,44 @@ const register = async (req, res) => {
             //6. Guardar el usuario en la base de datos (utilizando el servicio de usuario)
             //7. Devolver un mensaje de éxito si todo salió bien (status 201)
             //8. Devolver un mensaje de error si algo falló guardando al usuario (status 500)
-            const usuario= req.body;
-            const hashed =  await bcrypt.hash(  usuario.password, 10)
-            console.log("usuario", usuario)
-            console.log("hashed", hashed)
-};
+
+
+    const { usuario } = req.body;
+    
+    if (!usuario || !usuario.nombre || !usuario.apellido || !usuario.email || !usuario.password) {
+        return res.status(400).json({ error: 'Datos de usuario incompletos' });}
+    
+    else{
+    try {
+        
+        const userExists = await UsuariosService.getUsuarioByEmail(usuario.email);
+        if (userExists) {
+            return res.status(409).json({ error: 'El usuario ya existe' });
+        }
+
+        
+        const hashedPassword = await bcrypt.hash(usuario.password, 10);
+
+        
+        const newUser = {
+            nombre: usuario.nombre,
+            apellido: usuario.apellido,
+            email: usuario.email,
+            password: hashedPassword,
+        }
+    ;
+
+        
+        const savedUser = await usuariosService.createUsuario;
+
+        res.status(201).json({ message: 'Usuario creado exitosamente', user: savedUser });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al registrar al usuario' });
+    }
+    
+}};
+
 
 const login = async (req, res) => {
     // --------------- COMPLETAR ---------------
@@ -41,6 +74,28 @@ const login = async (req, res) => {
             8. Devolver un mensaje de error si algo falló (status 500)
         
     */
+   const {email, password} = req.body;
+   if (!email||!password){
+    return res.status(400).json({error: 'Se requiere email y contraseña'});
+   }
+   else{
+    try{
+       const user = await usuariosService.getUsuarioByEmail(email);
+       if (!user){ return req.status(400).json({error: 'invalid user'})}
+       const checkPassword = await bcrypt.compare(password, user.password);
+       if(!checkPassword){
+        return req.status(400).json({error: 'invalid password'})
+       }
+       else{
+        const token = jwt.sign({userid:user.userid},process.env.JWT_SECRET,{ expiresIn: '1h' });
+        req.status(200).json({user,token}); 
+       }
+    }
+    catch(error) {
+        console.error(error);
+        req.status(500).json({error: 'unable to login'})
+    }
+   }
 };
 
 export default { register, login };
