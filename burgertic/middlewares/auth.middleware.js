@@ -52,7 +52,7 @@ export const verifyAdmin = async (req, res, next) => {
     const verifiedUserid= req.id
     const admin= await usuariosService.getUsuarioById(verifiedUserid);
     if(!admin){
-        return req.status(403).json({error: 'no autorizado'})
+        return res.status(403).json({error: 'no autorizado'})
     }
     else{
         next();
