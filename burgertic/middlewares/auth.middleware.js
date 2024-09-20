@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import UsuariosService from "../services/usuarios.service.js";
+import usuariosService from "../services/usuarios.service.js";
 
 export const verifyToken = async (req, res, next) => {
     // --------------- COMPLETAR ---------------
@@ -19,7 +20,7 @@ export const verifyToken = async (req, res, next) => {
         const jwtoken = req.headers.authorization.slice(7);
         console.log("jwt", jwtoken)
         if(!jwtoken){
-            return res.status(400).json({error: "No token"});
+            return res.status(401).json({error: "No token"});
             
         }
         else{
@@ -27,8 +28,6 @@ export const verifyToken = async (req, res, next) => {
     
           const payload = await jwt.verify(jwtoken, process.env.JWT_SECRET)
           console.log("Desencriptado:", payload)
-          let result = await client.query("select * from  where userid=$1",[payload.userid])
-
           req.id=payload.userid
           next();
         }
@@ -49,4 +48,18 @@ export const verifyAdmin = async (req, res, next) => {
             2. Si no lo es, devolver un error 403 (Forbidden)
     
     */
+   try{
+    const verifiedUserid= req.id
+    const admin= await usuariosService.getUsuarioById(verifiedUserid);
+    if(!admin){
+        return req.status(403).json({error: 'no autorizado'})
+    }
+    else{
+        next();
+    }
+
+   }
+   catch(error){
+    console.log('error');
+   }
 };
