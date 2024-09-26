@@ -9,5 +9,8 @@ const router = Router();
 // Si no, Express interpretará "usuario" como un id y no funcionará correctamente
 
 // Recordar utilizar los middleware verifyToken y/o verifyAdmin en las rutas que correspondan
+router.get('/usuario/:id', PedidosController.getPedidosByUser)
+router.get('/', PedidosController.getPedidos)
+router.get('/')
 
 export default router;

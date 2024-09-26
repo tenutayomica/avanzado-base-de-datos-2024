@@ -1,5 +1,6 @@
+import pedidosService from "../services/pedidos.service.js";
 import PedidosService from "../services/pedidos.service.js";
-
+import verifiedUserid from "../middlewares/auth.middleware.js/verifyAdmin" 
 const getPedidos = async (req, res) => {
     // --------------- COMPLETAR ---------------
     /*
@@ -10,6 +11,15 @@ const getPedidos = async (req, res) => {
             3. Devolver un mensaje de error si algo falló (status 500)
         
     */
+   try{
+    const agarrarPedidos= await pedidosService.getPedidos();
+    res.status(200).json(agarrarPedidos);
+
+   }
+   catch(error){
+    console.error(error);
+    res.status(500).json({error:'ha fallado'});
+   }
 };
 
 const getPedidosByUser = async (req, res) => {
@@ -23,6 +33,16 @@ const getPedidosByUser = async (req, res) => {
             4. Devolver un mensaje de error si algo falló (status 500)
         
     */
+   try{
+     const userId= verifiedUserid;
+     const pedir= await pedidosService.getPedidosByUser(userId);
+     res.status(200).json(pedidos);
+    
+      }
+   catch(error){
+    console.error(error);
+    res.status(500).json({error: 'ha fallado'});
+   }
 };
 
 const getPedidoById = async (req, res) => {
@@ -36,6 +56,8 @@ const getPedidoById = async (req, res) => {
             4. Devolver un mensaje de error si algo falló (status 500)
         
     */
+   const idpido= req.params.id;
+   const pide= await PedidosService.getPedidoById()
 };
 
 const createPedido = async (req, res) => {
