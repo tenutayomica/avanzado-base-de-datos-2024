@@ -6,7 +6,7 @@ router.post('/register',AuthController.register);
 router.post('/login',AuthController.login);
 // ------------- COMPLETAR LAS RUTAS DE LOGIN Y REGISTER -------------
 
-export default router;
+
 class AuthController {
     static register(req, res) {
       // lógica para registrar un usuario
@@ -19,4 +19,4 @@ class AuthController {
     }
   }
   
-  export default AuthController;
+  export default router;
