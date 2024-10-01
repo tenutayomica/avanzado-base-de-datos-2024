@@ -28,7 +28,7 @@ export const verifyToken = async (req, res, next) => {
     
           const payload = await jwt.verify(jwtoken, process.env.JWT_SECRET)
           console.log("Desencriptado:", payload)
-          req.id=payload.userid
+          req.id = payload.userid
           next();
         }
         catch(error) {
