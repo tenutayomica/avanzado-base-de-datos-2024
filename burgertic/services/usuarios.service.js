@@ -47,7 +47,7 @@ const createUsuario = async (usuario) => {
     try {
         const { rows } = await client.query(
             "INSERT INTO usuarios (nombre, apellido, email, password, admin) VALUES ($1, $2, $3, $4, false)",
-            [usuario.nombre, usuario.apellido, usuario.email, usuario.password]
+            [nombre, apellido, email, password]
         );
 
         await client.end();

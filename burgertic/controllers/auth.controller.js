@@ -21,27 +21,27 @@ const register = async (req, res) => {
             //8. Devolver un mensaje de error si algo falló guardando al usuario (status 500)
 
 
-    const { usuario } = req.body;
-    
-    if (!usuario || !usuario.nombre || !usuario.apellido || !usuario.email || !usuario.password) {
+    const { nombre, apellido, email, password } = req.body;
+    console.log(nombre, apellido, email, password);
+    if (!nombre || !apellido || !email || !password) {
         return res.status(400).json({ error: 'Datos de usuario incompletos' });}
     
     else{
     try {
         
-        const userExists = await UsuariosService.getUsuarioByEmail(usuario.email);
+        const userExists = await UsuariosService.getUsuarioByEmail(email);
         if (userExists) {
             return res.status(409).json({ error: 'El usuario ya existe' });
         }
 
         
-        const hashedPassword = await bcrypt.hash(usuario.password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         
         const newUser = {
-            nombre: usuario.nombre,
-            apellido: usuario.apellido,
-            email: usuario.email,
+            nombre: nombre,
+            apellido: apellido,
+            email: email,
             password: hashedPassword,
         }
     ;
@@ -75,25 +75,26 @@ const login = async (req, res) => {
         
     */
    const {email, password} = req.body;
+   console.log(email, password);
    if (!email||!password){
     return res.status(400).json({error: 'Se requiere email y contraseña'});
    }
    else{
     try{
        const user = await usuariosService.getUsuarioByEmail(email);
-       if (!user){ return req.status(400).json({error: 'invalid user'})}
+       if (!user){ return res.status(400).json({error: 'invalid user'})}
        const checkPassword = await bcrypt.compare(password, user.password);
        if(!checkPassword){
-        return req.status(400).json({error: 'invalid password'})
+        return res.status(400).json({error: 'invalid password'})
        }
        else{
         const token = jwt.sign({userid:user.userid},process.env.JWT_SECRET,{ expiresIn: '1h' });
-        req.status(200).json({user,token}); 
+        res.status(200).json({user,token}); 
        }
     }
     catch(error) {
         console.error(error);
-        req.status(500).json({error: 'unable to login'})
+        res.status(500).json({error: 'unable to login'})
     }
    }
 };

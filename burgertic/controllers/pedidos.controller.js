@@ -1,6 +1,5 @@
 import pedidosService from "../services/pedidos.service.js";
 import PedidosService from "../services/pedidos.service.js";
-import { verifyToken } from "../middlewares/auth.middleware.js" 
 const getPedidos = async (req, res) => {
     // --------------- COMPLETAR ---------------
     /*
