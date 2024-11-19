@@ -1,5 +1,5 @@
 import UsuariosService from "../services/usuarios.service.js";
-import bcrypt from "bcryptjs";
+import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import usuariosService from "../services/usuarios.service.js";
 const register = async (req, res) => {
@@ -33,9 +33,10 @@ const register = async (req, res) => {
         if (userExists) {
             return res.status(409).json({ error: 'El usuario ya existe' });
         }
+        else{
 
         
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcryptjs.hash(password, 10);
 
         
         const newUser = {
@@ -47,10 +48,11 @@ const register = async (req, res) => {
     ;
 
         
-        const savedUser = await usuariosService.createUsuario;
+        const savedUser = await usuariosService.createUsuario(newUser);
 
         res.status(201).json({ message: 'Usuario creado exitosamente', user: savedUser });
-    } catch (error) {
+        console.log(savedUser);
+    } }catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al registrar al usuario' });
     }
@@ -74,29 +76,32 @@ const login = async (req, res) => {
             8. Devolver un mensaje de error si algo falló (status 500)
         
     */
-   const {email, password} = req.body;
-   console.log(email, password);
-   if (!email||!password){
-    return res.status(400).json({error: 'Se requiere email y contraseña'});
-   }
-   else{
-    try{
-       const user = await usuariosService.getUsuarioByEmail(email);
-       if (!user){ return res.status(400).json({error: 'invalid user'})}
-       const checkPassword = await bcrypt.compare(password, user.password);
-       if(!checkPassword){
-        return res.status(400).json({error: 'invalid password'})
-       }
-       else{
-        const token = jwt.sign({userid:user.userid},process.env.JWT_SECRET,{ expiresIn: '1h' });
-        res.status(200).json({user,token}); 
-       }
-    }
-    catch(error) {
-        console.error(error);
-        res.status(500).json({error: 'unable to login'})
-    }
-   }
-};
-
+            const { email, password } = req.body;
+            console.log(email,password);
+            if (!email || !password) {
+              return res.status(400).json({ error: 'Se requiere email y password' });
+            }
+            else {
+              try {
+                console.log(email);
+                const user = await UsuariosService.getUsuarioByEmail(email);
+                if (!user) { return res.status(400).json({ error: 'invalid user' }) }
+                else{
+                const checkPassword = await bcryptjs.compare(password, user.password);
+                console.log(checkPassword);
+                if (!checkPassword) {
+                  return res.status(400).json({ error: 'invalid password' })
+                }
+                else {
+                  const token = jwt.sign({ userid: user.id }, process.env.SECRET, { expiresIn: '1h' });
+                  res.status(200).json({ token:token });
+                }}
+              }
+              catch (error) {
+                console.error(error);
+                res.status(500).json({ error: 'unable to login' })
+              }
+            }
+          };
+    
 export default { register, login };

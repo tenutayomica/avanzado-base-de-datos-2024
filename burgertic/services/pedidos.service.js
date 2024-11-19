@@ -133,7 +133,7 @@ const createPedido = async (idUsuario, platos) => {
 
         const { rows } = await client.query(
             "INSERT INTO pedidos (id_usuario, fecha, estado) VALUES ($1, $2, 'pendiente') RETURNING id",
-            [idUsuario, new Date()]
+            [idUsuario, new Date( )]
         );
 
         const idPedido = rows[0].id;

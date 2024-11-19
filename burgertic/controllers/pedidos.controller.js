@@ -11,6 +11,7 @@ const getPedidos = async (req, res) => {
         
     */
    try{
+    console.log("entra");
     const agarrarPedidos= await pedidosService.getPedidos();
     res.status(200).json(agarrarPedidos);
 
@@ -33,9 +34,9 @@ const getPedidosByUser = async (req, res) => {
         
     */
    try{
-     const userId= req.id;
-     const pedir= await pedidosService.getPedidosByUser(userId);
-     res.status(200).json(pedidos);
+     const idUsuario= req.id;
+     const pedir= await pedidosService.getPedidosByUser(idUsuario);
+     res.status(200).json(pedir);
     
       }
    catch(error){
@@ -56,7 +57,9 @@ const getPedidoById = async (req, res) => {
         
     */
    try{
-   const {id}= req.params.id;
+    console.log("entra");
+   const {id}= req.params;
+   console.log(id);
    const pide= await PedidosService.getPedidoById(id)
    if (!pide){
     return res.status(404).json({error: "inexistente"});
@@ -87,29 +90,30 @@ const createPedido = async (req, res) => {
     */
 
             try{
+                console.log("entra");
                 const {platos}= req.body;
-                if(!platos||!Array.isArray({platos})||platos.length==0){
+                console.log(platos,platos.length );
+                if(!platos||!Array.isArray(platos)||platos.length==0){
                  return res.status(400).json({error: 'no se cumplen las condiciones'});
                 }
                 else{
+                    console.log(platos.id, platos.cantidad);
                    platos.forEach(platos=> {
-                    if(!platos.id||!productos.cantidad){
+                    if(!platos.id||!platos.cantidad){
                         return res.status(400).json({error:'error'});
                     }
                    });
-                   try{
-                   const userid= req.id;
-                   const pedidonNuevo= await pedidosService.createPedido({platos,userid});
+                   
+                   console.log("valida ok, va a crear pedido")
+                   const idUsuario= req.id;
+                   const pedidonNuevo= await pedidosService.createPedido(idUsuario,platos);
                    return res.status(201).json({message: 'exito'});
 
                    }
-                   catch(error){
-                    console.error('error creando pedido', error);
-                    res.status(500).json({error: 'error'});
-                   }
+                   
                 }
 
-            }
+            
             catch(error){
                 console.error('error creando pedido', error);
                 res.status(500).json({error: 'error'});
@@ -131,7 +135,7 @@ const aceptarPedido = async (req, res) => {
         
     */
    try{
-    const {id}= req.params.id;
+    const {id}= req.params;
     const pedido= await pedidosService.getPedidoById(id);
     if(!pedido){
         return res.status(404).json({error:'not found'});
@@ -141,7 +145,8 @@ const aceptarPedido = async (req, res) => {
             return res.status(400).json({error:'error'});
         }
         else{
-            pedido.estado= 'aceptado';
+            const estado = 'aceptado';
+            const actualizar = await pedidosService.updatePedido(id,estado)
             return res.status(200).json({message: 'exito'});
         }
     }
@@ -167,7 +172,9 @@ const comenzarPedido = async (req, res) => {
         
     */
    try{
-   const {id}= req.params.id;
+    console.log("entra");
+    const {id}= req.params;
+    console.log(id);
    const pedido= await pedidosService.getPedidoById(id);
    if(!pedido){
     return res.status(404).json({error:'pedido no encontrado'});
@@ -176,8 +183,8 @@ const comenzarPedido = async (req, res) => {
      if(pedido.estado=!'aceptado')
         return res.status(400).json({error:'error'});
     else{
-        pedido.estado= 'en camino';
-        await pedidosService.updatePedido(pedido.estado);
+        const estado= 'en camino';
+        await pedidosService.updatePedido(id, estado);
         return res.status(200).json({message: 'exito'});
 
     }
@@ -205,7 +212,7 @@ const entregarPedido = async (req, res) => {
         
     */
    try{
-    const{id}= req.params.id;
+    const{id}= req.params;
     const pedido= await pedidosService.getPedidoById(id);
     if(!pedido){
         return res.status(404).json({error: 'not found'});
@@ -216,8 +223,8 @@ const entregarPedido = async (req, res) => {
             return res.status(400).json({error:'error'});
         }
         else{
-            pedido.estado= 'entregado';
-            const update= await pedidosService.updatePedido(pedido.estado);
+            const estado= 'entregado';
+            const update= await pedidosService.updatePedido(id,estado);
             return res.status(200).json({message: 'exito'});
         }
     }
@@ -241,7 +248,7 @@ const deletePedido = async (req, res) => {
         
     */
    try {
-    const {id} = req.params.id;
+    const {id} = req.params;
     const pedido= await pedidosService.getPedidoById(id);
     if (!pedido){
         return res.status(404).json({error: 'not found'});

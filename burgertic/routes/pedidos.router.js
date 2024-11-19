@@ -9,13 +9,13 @@ const router = Router();
 // Si no, Express interpretará "usuario" como un id y no funcionará correctamente
 
 // Recordar utilizar los middleware verifyToken y/o verifyAdmin en las rutas que correspondan
-router.get('/pedidos/usuario', verifyToken, PedidosController.getPedidosByUser)
-router.get('/', verifyAdmin, PedidosController.getPedidos)
-router.put('/pedidos/:id/aceptar', verifyAdmin, PedidosController.aceptarPedido)
-router.put('/pedidos/:id/comenzar', verifyAdmin, PedidosController.comenzarPedido)
-router.post('/',verifyToken, PedidosController.createPedido)
-router.put('/pedidos/:id', verifyToken, PedidosController.deletePedido)
-router.get('/pedidos/:id', verifyAdmin, PedidosController.getPedidoById)
-router.put('/pedidos/:id/entregar', verifyAdmin, PedidosController.entregarPedido)
+router.get('/usuario', verifyToken, PedidosController.getPedidosByUser)//listo
+router.get('/', verifyToken, verifyAdmin, PedidosController.getPedidos)//listo
+router.put('/:id/aceptar', verifyToken, verifyAdmin, PedidosController.aceptarPedido)
+router.put('/:id/comenzar', verifyToken, verifyAdmin, PedidosController.comenzarPedido)
+router.post('/',verifyToken, PedidosController.createPedido) //listo
+router.delete('/:id', verifyToken, verifyAdmin, PedidosController.deletePedido)
+router.get('/:id', verifyToken, verifyAdmin, PedidosController.getPedidoById)//listo
+router.put('/:id/entregar', verifyToken, verifyAdmin, PedidosController.entregarPedido)
 
 export default router;

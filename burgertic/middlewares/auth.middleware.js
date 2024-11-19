@@ -17,6 +17,7 @@ export const verifyToken = async (req, res, next) => {
     */
         
         try{
+            console.log("entra");
         const jwtoken = req.headers.authorization.slice(7);
         console.log("jwt", jwtoken)
         if(!jwtoken){
@@ -26,7 +27,7 @@ export const verifyToken = async (req, res, next) => {
         else{
         try {
     
-          const payload = await jwt.verify(jwtoken, process.env.JWT_SECRET)
+          const payload = await jwt.verify(jwtoken, process.env.SECRET)
           console.log("Desencriptado:", payload)
           req.id = payload.userid
           next();
@@ -49,8 +50,9 @@ export const verifyAdmin = async (req, res, next) => {
     
     */
    try{
+    console.log("entra");
     const verifiedUserid= req.id
-    const admin= await usuariosService.getUsuarioById(verifiedUserid);
+    const admin = await usuariosService.getUsuarioById(verifiedUserid);
     if(!admin){
         return res.status(403).json({error: 'no autorizado'})
     }
