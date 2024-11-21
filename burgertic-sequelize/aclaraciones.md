@@ -21,3 +21,7 @@ Igual que como probaste el TP anterior. Este trabajo debería ser un 'refactor' 
 ### ¿Hasta cuándo tengo tiempo?
 
 Si sos de la rotación ABD, tenés tiempo hasta el domingo 17 de noviembre a las 23:59hs.
+
+### Entrega
+
+[Formulario de entrega](https://forms.gle/ktF5TTGBrVE1w8E17)
