@@ -3,6 +3,7 @@ import PlatosRouter from "./routes/platos.router.js";
 import AuthRouter from "./routes/auth.router.js";
 import PedidosRouter from "./routes/pedidos.router.js";
 import cors from "cors";
+import {crearRelaciones} from "./models/relaciones.js"
 import "dotenv/config";
 
 const app = express();
@@ -15,6 +16,7 @@ app.get("/", (_, res) => res.send("BurgerTIC API is running..."));
 app.use("/platos", PlatosRouter);
 app.use("/auth", AuthRouter);
 app.use("/pedidos", PedidosRouter);
+crearRelaciones()
 
 app.listen(process.env.PORT || 9000, () =>
     console.log(`Server is running on port ${process.env.PORT || 9000}`)

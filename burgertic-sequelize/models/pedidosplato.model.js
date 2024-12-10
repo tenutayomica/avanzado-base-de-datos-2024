@@ -21,6 +21,5 @@ PlatosXPedidos.init(
         timestamps: false,
     }
 );
-Pedido.belongsToMany(Plato,{through:PlatosXPedidos});
-Plato.belongsToMany(Pedido,{through:PlatosXPedidos});
+
 console.log("****************** SE LLAMA!!!")

@@ -226,19 +226,21 @@ const getPedidosByUser = async (idUsuario) => {
     }
 };*/
 const createPedido = async (idUsuario, platos) =>{
-    try{
-        const crear= await Pedido.create({
-            id_usuario: idUsuario,
+        console.log(idUsuario,platos);
+        const pedido= Pedido.build({
+            usuarioId: idUsuario,
             fecha: new Date(),
             estado: 'pendiente',
         })
-        const agregar= await Pedido.AddPlatos
+        console.log("antes save, id usuario", idUsuario)
+        pedido.save();
+        console.log("********desp save- platos:", platos)
+        const agregar= await pedido.addPlatos(platos);
+        console.log("desp addplatos")
+       
+    }
     
-    }
-    catch(error){
-        throw error;
-    }
-}
+
     
 /*const updatePedido = async (id, estado) => {
     if (

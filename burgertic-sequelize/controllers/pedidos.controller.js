@@ -44,7 +44,7 @@ const createPedido = async (req, res) => {
     let error = false;
 
     platos.forEach((plato) => {
-        if (!plato.id || !plato.cantidad) {
+        if (!plato.platoId || !plato.cantidad) {
             res.status(400).json({
                 message: "Los platos deben tener un ID y una cantidad",
             });
@@ -54,12 +54,9 @@ const createPedido = async (req, res) => {
 
     if (error) return;
 
-    try {
         await PedidosService.createPedido(req.idUsuario, platos);
         res.json({ message: "Pedido creado con éxito" });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+   
 };
 
 const aceptarPedido = async (req, res) => {

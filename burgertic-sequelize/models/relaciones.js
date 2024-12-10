@@ -1,4 +1,14 @@
-import { Pedido } from "./pedidos.model";
-import {Usuario} from "./usuarios.model";
+import { Pedido } from "./pedidos.model.js";
+import {Usuario} from "./usuarios.model.js";
+import {Plato} from "./platos.model.js";
+import { PlatosXPedidos } from "./pedidosplato.model.js";
+import { DataTypes, Model } from "sequelize";
+import { sequelize } from "../db.js";
+
+export const crearRelaciones = async() => {
 Usuario.hasMany(Pedido);
-Pedido.belongsToMany(Usuario);
+Pedido.belongsTo(Usuario);
+Pedido.belongsToMany(Plato,{through:PlatosXPedidos});
+Plato.belongsToMany(Pedido,{through:PlatosXPedidos});
+await sequelize.sync({alter: "true"});
+}
