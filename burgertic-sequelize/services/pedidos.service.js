@@ -1,8 +1,11 @@
 import { config } from "../db.js";
 import pkg from "pg";
+import {PlatosXPedidos} from '../models/pedidosplato.model.js';
+import { Pedido } from '../models/pedidos.model.js';
+import {Plato} from '../models/platos.model.js';
 const { Client } = pkg;
 
-const getPlatosByPedido = async (idPedido) => {
+/*const getPlatosByPedido = async (idPedido) => {
     const client = new Client(config);
     await client.connect();
 
@@ -36,9 +39,19 @@ const getPlatosByPedido = async (idPedido) => {
         await client.end();
         throw error;
     }
-};
+};*/
+const getPlatosByPedido = async (idPedido)=>{
+    try{
+        const pedido = await Pedido.findByPk(idPedido);
+        const plato= await pedido.getPlatos();
+        return plato;
 
-const getPedidos = async () => {
+    }
+    catch(error){
+        throw error;
+    }
+}
+/*const getPedidos = async () => {
     const client = new Client(config);
     await client.connect();
 
@@ -63,9 +76,22 @@ const getPedidos = async () => {
         await client.end();
         throw error;
     }
-};
-
-const getPedidoById = async (id) => {
+};*/
+const getPedidos = async () =>{
+    try{
+        const pedidos= await Pedido.findAll();
+        pedidos.map((pedido)=>{pedido.getPlatos()})
+        //pedidos.getPlatos();
+    
+        return pedidos;
+        
+    }
+    catch(error){
+        throw error;
+    }
+}
+    
+/*const getPedidoById = async (id) => {
     const client = new Client(config);
     await client.connect();
 
@@ -87,9 +113,25 @@ const getPedidoById = async (id) => {
         await client.end();
         throw error;
     }
-};
+};*/
+const getPedidoById = async (id) =>{
+    
+    console.log(id);
+    const pedido = await Pedido.findByPk(id);
+    console.log("pedido:",pedido)
+    const platos= await getPlatosByPedido(pedido.id)
 
-const getPedidosByUser = async (idUsuario) => {
+
+return {
+    id:pedido.id,
+    id_usuario: pedido.id_usuario,
+    fecha: pedido.fecha,
+    estado: pedido.estado,
+    platos: platos
+
+} 
+}
+/*const getPedidosByUser = async (idUsuario) => {
     const client = new Client(config);
     await client.connect();
 
@@ -117,9 +159,24 @@ const getPedidosByUser = async (idUsuario) => {
         await client.end();
         throw error;
     }
-};
-
-const createPedido = async (idUsuario, platos) => {
+};*/
+const getPedidosByUser = async (idUsuario) => {
+    try{
+        const find= await Pedido.findOne({where: {id_usuario: idUsuario}});
+        return{
+            id: find.id,
+            id_usuario: find.id_usuario,
+            fecha: find.fecha,
+            estado: find.estado,
+            platos: await getPlatosByPedido(find.id),
+        }
+    }
+    catch(error){
+        throw error; 
+    }
+}
+    
+/*const createPedido = async (idUsuario, platos) => {
     const client = new Client(config);
     await client.connect();
 
@@ -167,9 +224,23 @@ const createPedido = async (idUsuario, platos) => {
         await client.end();
         throw error;
     }
-};
-
-const updatePedido = async (id, estado) => {
+};*/
+const createPedido = async (idUsuario, platos) =>{
+    try{
+        const crear= await Pedido.create({
+            id_usuario: idUsuario,
+            fecha: new Date(),
+            estado: 'pendiente',
+        })
+        const agregar= await Pedido.AddPlatos
+    
+    }
+    catch(error){
+        throw error;
+    }
+}
+    
+/*const updatePedido = async (id, estado) => {
     if (
         estado !== "aceptado" &&
         estado !== "en camino" &&
@@ -192,9 +263,22 @@ const updatePedido = async (id, estado) => {
         await client.end();
         throw error;
     }
-};
+};*/
+const updatePedido = async (id, estado) =>{
+    try{
+        if(estado!="aceptado"||estado!="en camino"||estado!="entregado"){
+            throw new Error( "invalid");
+        }
+        const upup= await Pedido.findByPk(id);
+        upup.estado= estado;
+        await upup.save();
+    }
+    catch(error){
+      throw error;
+    }
 
-const deletePedido = async (id) => {
+}
+/*const deletePedido = async (id) => {
     const client = new Client(config);
     await client.connect();
 
@@ -210,8 +294,17 @@ const deletePedido = async (id) => {
         await client.end();
         throw error;
     }
-};
+};*/
+const deletePedido = async (id) =>{
+    try{
+        const find= await Pedido.findByPk(id);
+        const borrar= await Pedido.destroy(id);
 
+    }
+    catch(error){
+        throw error;
+    }
+}
 export default {
     getPedidos,
     getPedidoById,

@@ -1,8 +1,9 @@
 import { config } from "../db.js";
 import pkg from "pg";
+import { Usuario } from "../models/usuarios.model.js";
 const { Client } = pkg;
 
-const getUsuarioByEmail = async (email) => {
+/*const getUsuarioByEmail = async (email) => {
     const client = new Client(config);
     await client.connect();
 
@@ -19,9 +20,21 @@ const getUsuarioByEmail = async (email) => {
         await client.end();
         throw error;
     }
-};
+};*/
+const getUsuarioByEmail = async (email)=>{
+   try{
+    const usuario= await Usuario.findOne({where:{email:email,}});
+   return usuario;
+}
+catch(error){
+    throw error;
+}}
+     
+    
+    
+    
 
-const getUsuarioById = async (id) => {
+/*const getUsuarioById = async (id) => {
     const client = new Client(config);
     await client.connect();
 
@@ -38,9 +51,11 @@ const getUsuarioById = async (id) => {
         await client.end();
         throw error;
     }
-};
-
-const createUsuario = async (usuario) => {
+};*/
+const getUsuarioById = async (id)=>
+        await Usuario.findByPk(id);
+    
+/*const createUsuario = async (usuario) => {
     const client = new Client(config);
     await client.connect();
 
@@ -56,6 +71,14 @@ const createUsuario = async (usuario) => {
         await client.end();
         throw error;
     }
-};
+};*/
+
+const createUsuario = async (usuario) =>
+    Usuario.create({
+        nombre: usuario.nombre, 
+        apellido: usuario.apellido,
+        email: usuario.email,
+        password: usuario.password,
+    });
 
 export default { getUsuarioByEmail, getUsuarioById, createUsuario };

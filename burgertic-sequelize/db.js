@@ -1,10 +1,10 @@
 import "dotenv/config";
 
 export const config = {
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
+    user: 'burgertic_owner',
+    host: 'ep-flat-morning-a1r4aenk.ap-southeast-1.aws.neon.tech',
+    database: 'burgertic',
+    password: 'cY3MCW0bqQRN',
     port: 5432,
     ssl: true,
 };
@@ -12,7 +12,7 @@ export const config = {
 import { Sequelize } from "sequelize";
 
 export const sequelize = new Sequelize(
-    process.env.DB_URL
+    'postgresql://burgertic_owner:cY3MCW0bqQRN@ep-flat-morning-a1r4aenk.ap-southeast-1.aws.neon.tech/burgertic?sslmode=require'
 );
 
 try {

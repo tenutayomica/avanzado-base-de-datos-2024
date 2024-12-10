@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 
 const register = async (req, res) => {
     const usuario = req.body;
+    console.log(usuario);
 
     if (!usuario)
         return res.status(400).json({ message: "Se necesita un usuario" });
@@ -17,7 +18,7 @@ const register = async (req, res) => {
         return res.status(400).json({ message: "Faltan campos por llenar" });
 
     const usuario2 = await UsuariosService.getUsuarioByEmail(usuario.email);
-
+     console.log(usuario2);
     if (usuario2)
         return res.status(400).json({ message: "Email ya registrado" });
 
@@ -51,7 +52,7 @@ const login = async (req, res) => {
         return res.status(400).json({ message: "Contraseña incorrecta" });
 
     try {
-        const token = jwt.sign({ id: usuario.id }, process.env.SECRET, {
+        const token = jwt.sign({ id: usuario.id }, "tu_secreto", {
             expiresIn: "30m",
         });
         res.json({
